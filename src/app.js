@@ -4,21 +4,18 @@ import items from './items.json';
 import './app.scss';
 
 let myCart = new Cart();
-let milk = new Item('milk', 1.99);
-myCart.addItem(milk);
-let bread = new Item('bread', 1.5);
-myCart.addItem(bread);
-myCart.addItem(bread);
-let cereal = new Item('cereal', 4);
-myCart.addItem(cereal);
-myCart.reduceQuantity(bread);
-myCart.removeItem(bread);
-myCart.addItem(cereal);
-let towel = new Item('towel', 5.5);
-myCart.addItem(towel);
-myCart.removeItem(cereal);
 console.log(myCart);
-let itemsTable;
+let itemsTable, cartEl;
+
+function itemRowClick(event) {
+	console.log(event.target.parentNode.dataset);
+	let dataset = event.target.parentNode.dataset;
+	console.log('dataset', dataset['price']);
+	myCart.addItem(new Item(dataset['name'], dataset['price']));
+	let cartTotalEl = document.getElementById('cart-total');
+	cartTotalEl.innerText = myCart.getTotal();
+	displayCart();
+}
 
 const generateTable = () => {
 	document.body.insertAdjacentHTML(
@@ -30,6 +27,7 @@ const generateTable = () => {
 	itemsTable.setAttribute('id', 'items-table');
 	itemsTable.insertAdjacentHTML('beforebegin', '<h2>Items list</h2>');
 	itemsTable.insertAdjacentHTML('afterend', '<h2>Cart</h2>');
+	itemsTable.querySelector('tbody').addEventListener('click', itemRowClick);
 };
 
 const displayItems = () => {
@@ -37,7 +35,7 @@ const displayItems = () => {
 	items.forEach(item => {
 		tableBody.insertAdjacentHTML(
 			'beforeend',
-			`<tr><td>${item.name}</td><td>${item.price}</td></tr>`
+			`<tr data-name=${item.name} data-price='${item.price}'><td>${item.name}</td><td>${item.price}</td></tr>`
 		);
 	});
 };
@@ -45,7 +43,7 @@ const displayItems = () => {
 const generateCart = () => {
 	let cartTitle = document.getElementsByTagName('h2')[1];
 	cartTitle.insertAdjacentHTML('afterend', '<div id="cart"></div>');
-	let cartEl = document.getElementById('cart');
+	cartEl = document.getElementById('cart');
 	cartEl.insertAdjacentHTML(
 		'afterbegin',
 		`
@@ -60,13 +58,29 @@ const generateCart = () => {
 		'beforeend',
 		`
 	<div>
-		<div>Total: $${myCart.getTotal()}</div>
+		<div id="cart-rows"></div>
+		<div id="total-row">Total: $<span id="cart-total">${myCart.getTotal()}</span></div>
 	</div>`
 	);
 };
 
 const displayCart = () => {
 	let items = myCart.getItems();
+	let cartRowsContainer = cartEl.querySelector('#cart-rows');
+	cartRowsContainer.textContent = '';
+	items.forEach(item => {
+		cartRowsContainer.insertAdjacentHTML(
+			'beforeend',
+			`
+			<div class="cart-row">
+				<div>${item.name}</div>
+				<div>${item.price}</div>
+				<input type="number" value="${item.quantity}">
+				<button>Remove Item</button>
+			</div>
+		`
+		);
+	});
 };
 
 generateTable();

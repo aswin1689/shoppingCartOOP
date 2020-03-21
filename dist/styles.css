@@ -1,3 +1,26 @@
+body {
+  font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; }
+
 #items-table {
-  padding: 10px; }
+  border-collapse: collapse;
+  width: 100%; }
+  #items-table td,
+  #items-table th {
+    border: 1px solid #ddd;
+    padding: 8px; }
+  #items-table tr:nth-child(even) {
+    background-color: #f2f2f2; }
+  #items-table tr:hover {
+    background-color: #ddd; }
+  #items-table thead tr {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4caf50;
+    color: white; }
+
+#cart #cart-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold; }
 

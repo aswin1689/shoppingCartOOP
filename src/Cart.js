@@ -6,6 +6,7 @@ export default class Cart {
 
 	addItem(newItem) {
 		console.log('old cart', this.items);
+		console.log('item to add : ', newItem);
 		let sameItem = this.items.filter(item => item.name == newItem.name);
 		if (sameItem.length > 0) {
 			const updatedItem = {
@@ -27,10 +28,12 @@ export default class Cart {
 	}
 
 	getTotal() {
-		this.items.forEach(item => {
-			this.total += item.quantity * item.price;
-		});
-		return this.total;
+		return this.items
+			.map(item => item.price * item.quantity)
+			.reduce(
+				(accumulator, currentValue) => accumulator + currentValue,
+				0
+			);
 	}
 
 	removeItem(itemToRemove) {
