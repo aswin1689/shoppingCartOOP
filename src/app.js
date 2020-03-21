@@ -51,8 +51,15 @@ const removeItemFromCart = () => {
 
 const updateItemQuantity = () => {
 	let itemName = event.target.closest('.cart-row').dataset['name'];
-	let itemQuantity = parseInt(event.target.previousSibling.previousSibling.value);
-	myCart.updateQuantity(itemName, itemQuantity);
+	let itemQuantity = parseInt(
+		event.target.previousSibling.previousSibling.value
+	);
+	if (itemQuantity == 0) {
+		myCart.removeItem(itemName);
+		displayCartItems();
+	} else {
+		myCart.updateQuantity(itemName, itemQuantity);
+	}
 	let cartTotalEl = document.getElementById('cart-total');
 	cartTotalEl.innerText = myCart.getTotal().toFixed(2);
 };
@@ -106,7 +113,7 @@ const displayCartItems = () => {
 				<div class="item-name-col">${item.name}</div>
 				<div>$${parseInt(item.price).toFixed(2)}</div>
 				<div>
-					<input type="number" min="0" max="10" value="${item.quantity}">
+					<input type="number" min="0" max="100" value="${item.quantity}">
 					<button data-action="update">update</button>
 				</div>
 				<button data-action="remove">Remove Item</button>

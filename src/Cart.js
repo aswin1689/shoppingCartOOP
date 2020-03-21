@@ -1,3 +1,5 @@
+import { compareStrings } from './utils';
+
 export default class Cart {
 	constructor() {
 		this.items = [];
@@ -21,7 +23,7 @@ export default class Cart {
 	}
 
 	getItems() {
-		return this.items;
+		return this.items.sort(compareStrings);
 	}
 
 	getTotal() {
