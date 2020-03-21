@@ -5,24 +5,21 @@ export default class Cart {
 	}
 
 	addItem(newItem) {
-		for(let i in this.items) {
-			let currItem = this.items[i]
-			if(currItem.name === newItem.name) {
-				currItem.quantity += 1;
-				return;
-			}
+		console.log('old cart', this.items);
+		let sameItem = this.items.filter(item => item.name == newItem.name);
+		if (sameItem.length > 0) {
+			const updatedItem = {
+				...sameItem[0],
+				quantity: sameItem[0].quantity + 1
+			};
+			this.items = [
+				...this.items.filter(item => item.name !== newItem.name),
+				updatedItem
+			];
+		} else {
+			this.items = [...this.items, newItem];
 		}
-		this.items.push(newItem);
-		// let sameItem = this.items.filter(item => item.name == newItem.name);
-		// if (sameItem.length > 0) {
-		// 	const updatedItem = {
-		// 		...sameItem[0],
-		// 		quantity: sameItem[0].quantity++
-		// 	};
-		// 	this.items = [...this.items, updatedItem];
-		// } else {
-		// 	this.items = [...this.items, newItem];
-		// }
+		console.log('new cart', this.items);
 	}
 
 	getItems() {
@@ -37,15 +34,18 @@ export default class Cart {
 	}
 
 	removeItem(itemToRemove) {
-		this.items = this.items.filter(item => {
-			return item.name != itemToRemove.name;
-		});
+		this.items = [
+			...this.items.filter(item => {
+				return item.name != itemToRemove.name;
+			})
+		];
 	}
 
 	reduceQuantity(itemToRemove) {
 		this.items = this.items.map(item => {
-			if (item.name == itemToRemove.name) return {...item, quantity : item.quantity-1};
-			else return {...item};
+			if (item.name == itemToRemove.name)
+				return { ...item, quantity: item.quantity - 1 };
+			else return { ...item };
 		});
 	}
 }

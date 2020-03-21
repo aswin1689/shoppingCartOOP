@@ -6,20 +6,17 @@ import './app.scss';
 let myCart = new Cart();
 let milk = new Item('milk', 1.99);
 myCart.addItem(milk);
-console.log(myCart);
 let bread = new Item('bread', 1.5);
 myCart.addItem(bread);
-console.log(myCart);
 myCart.addItem(bread);
-console.log(myCart);
 let cereal = new Item('cereal', 4);
 myCart.addItem(cereal);
-console.log(myCart);
 myCart.reduceQuantity(bread);
-console.log(myCart);
 myCart.removeItem(bread);
-console.log(myCart);
 myCart.addItem(cereal);
+let towel = new Item('towel', 5.5);
+myCart.addItem(towel);
+myCart.removeItem(cereal);
 console.log(myCart);
 let itemsTable;
 
@@ -63,7 +60,7 @@ const generateCart = () => {
 		'beforeend',
 		`
 	<div>
-		<div>Total: ${myCart.getTotal()}</div>
+		<div>Total: $${myCart.getTotal()}</div>
 	</div>`
 	);
 };
