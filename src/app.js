@@ -4,17 +4,16 @@ import items from './items.json';
 import './app.scss';
 
 let myCart = new Cart();
-console.log(myCart);
 let itemsTable, cartEl;
 
 function itemRowClick(event) {
-	console.log(event.target.parentNode.dataset);
 	let dataset = event.target.parentNode.dataset;
-	console.log('dataset', dataset['price']);
-	myCart.addItem(new Item(dataset['name'], dataset['price']));
+	myCart.addItem(
+		new Item(dataset['name'], parseInt(dataset['price']).toFixed(2))
+	);
 	let cartTotalEl = document.getElementById('cart-total');
-	cartTotalEl.innerText = myCart.getTotal();
-	displayCart();
+	cartTotalEl.innerText = myCart.getTotal().toFixed(2);
+	displayCartItems();
 }
 
 const generateTable = () => {
@@ -35,9 +34,35 @@ const displayItems = () => {
 	items.forEach(item => {
 		tableBody.insertAdjacentHTML(
 			'beforeend',
-			`<tr data-name=${item.name} data-price='${item.price}'><td>${item.name}</td><td>${item.price}</td></tr>`
+			`<tr data-name=${item.name} data-price='${item.price}'><td>${
+				item.name
+			}</td><td>${parseInt(item.price).toFixed(2)}</td></tr>`
 		);
 	});
+};
+
+const removeItemFromCart = () => {
+	let itemName = event.target.closest('.cart-row').dataset['name'];
+	myCart.removeItem(itemName);
+	displayCartItems();
+	let cartTotalEl = document.getElementById('cart-total');
+	cartTotalEl.innerText = myCart.getTotal().toFixed(2);
+};
+
+const updateItemQuantity = () => {
+	let itemName = event.target.closest('.cart-row').dataset['name'];
+	let itemQuantity = parseInt(event.target.previousSibling.previousSibling.value);
+	myCart.updateQuantity(itemName, itemQuantity);
+	let cartTotalEl = document.getElementById('cart-total');
+	cartTotalEl.innerText = myCart.getTotal().toFixed(2);
+};
+
+const onCartRowClick = event => {
+	if (event.target.dataset.action == 'remove') {
+		removeItemFromCart();
+	} else if (event.target.dataset.action == 'update') {
+		updateItemQuantity();
+	}
 };
 
 const generateCart = () => {
@@ -51,7 +76,7 @@ const generateCart = () => {
 			<div>Name</div>
 			<div>Price</div>
 			<div>Quantity</div>
-			<div>sub-total</div>
+			<div>Options</div>
 	</div>`
 	);
 	cartEl.insertAdjacentHTML(
@@ -59,12 +84,17 @@ const generateCart = () => {
 		`
 	<div>
 		<div id="cart-rows"></div>
-		<div id="total-row">Total: $<span id="cart-total">${myCart.getTotal()}</span></div>
+		<div id="total-row">Total: $<span id="cart-total">${myCart
+			.getTotal()
+			.toFixed(2)}</span></div>
 	</div>`
 	);
+	cartEl
+		.querySelector('#cart-rows')
+		.addEventListener('click', onCartRowClick);
 };
 
-const displayCart = () => {
+const displayCartItems = () => {
 	let items = myCart.getItems();
 	let cartRowsContainer = cartEl.querySelector('#cart-rows');
 	cartRowsContainer.textContent = '';
@@ -72,11 +102,14 @@ const displayCart = () => {
 		cartRowsContainer.insertAdjacentHTML(
 			'beforeend',
 			`
-			<div class="cart-row">
-				<div>${item.name}</div>
-				<div>${item.price}</div>
-				<input type="number" value="${item.quantity}">
-				<button>Remove Item</button>
+			<div class="cart-row" data-name="${item.name}">
+				<div class="item-name-col">${item.name}</div>
+				<div>$${parseInt(item.price).toFixed(2)}</div>
+				<div>
+					<input type="number" min="0" max="10" value="${item.quantity}">
+					<button data-action="update">update</button>
+				</div>
+				<button data-action="remove">Remove Item</button>
 			</div>
 		`
 		);
@@ -86,4 +119,4 @@ const displayCart = () => {
 generateTable();
 displayItems();
 generateCart();
-displayCart();
+displayCartItems();

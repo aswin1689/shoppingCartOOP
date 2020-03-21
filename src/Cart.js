@@ -5,8 +5,6 @@ export default class Cart {
 	}
 
 	addItem(newItem) {
-		console.log('old cart', this.items);
-		console.log('item to add : ', newItem);
 		let sameItem = this.items.filter(item => item.name == newItem.name);
 		if (sameItem.length > 0) {
 			const updatedItem = {
@@ -20,7 +18,6 @@ export default class Cart {
 		} else {
 			this.items = [...this.items, newItem];
 		}
-		console.log('new cart', this.items);
 	}
 
 	getItems() {
@@ -36,18 +33,18 @@ export default class Cart {
 			);
 	}
 
-	removeItem(itemToRemove) {
+	removeItem(itemNameToRemove) {
 		this.items = [
 			...this.items.filter(item => {
-				return item.name != itemToRemove.name;
+				return item.name != itemNameToRemove;
 			})
 		];
 	}
 
-	reduceQuantity(itemToRemove) {
+	updateQuantity(itemName, newQuantity) {
 		this.items = this.items.map(item => {
-			if (item.name == itemToRemove.name)
-				return { ...item, quantity: item.quantity - 1 };
+			if (item.name == itemName)
+				return { ...item, quantity: newQuantity };
 			else return { ...item };
 		});
 	}
