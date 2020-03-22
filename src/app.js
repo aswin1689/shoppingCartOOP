@@ -6,7 +6,7 @@ import './app.scss';
 let myCart = new Cart();
 let itemsTable, cartEl;
 
-function itemRowClick(event) {
+const itemRowClick = (event) => {
 	let dataset = event.target.parentNode.dataset;
 	myCart.addItem(
 		new Item(dataset['name'], parseInt(dataset['price']).toFixed(2))
@@ -19,7 +19,15 @@ function itemRowClick(event) {
 const generateTable = () => {
 	document.body.insertAdjacentHTML(
 		'afterbegin',
-		'<table><thead><tr><td>Name</td><td>Price</td></tr></thead><tbody></tbody></table>'
+		`<table>
+			<thead>
+				<tr>
+					<td>Name</td>
+					<td>Price</td>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>`
 	);
 
 	itemsTable = document.getElementsByTagName('table')[0];
